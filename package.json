@@ -1,0 +1,54 @@
+{
+  "name": "page-validation",
+  "version": "0.1.0",
+  "description": "WebAssembly bindings for page PDF/A and PDF/UA validation.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JosephBARBIERDARNAL/page-wasm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JosephBARBIERDARNAL/page-wasm/issues"
+  },
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/page_validation.js",
+    "dist/page_validation.d.ts",
+    "dist/page_validation_bg.js",
+    "dist/page_validation_bg.wasm",
+    "dist/page_validation_bg.wasm.d.ts",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "npm run build:wasm && npm run build:ts",
+    "build:ts": "tsc -p tsconfig.json",
+    "build:wasm": "wasm-pack build --target bundler --release --no-opt --out-dir dist --out-name page_validation",
+    "format": "prettier --write eslint.config.js src tests vite.config.ts package.json tsconfig.json tsconfig.test.json .github/workflows/ci.yml",
+    "format:check": "prettier --check eslint.config.js src tests vite.config.ts package.json tsconfig.json tsconfig.test.json .github/workflows/ci.yml",
+    "lint": "eslint src tests",
+    "test": "npm run build && vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "@types/node": "^24.3.0",
+    "eslint": "^9.35.0",
+    "globals": "^16.3.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.42.0",
+    "vite-plugin-wasm": "^3.6.0",
+    "vitest": "^3.2.4"
+  }
+}
