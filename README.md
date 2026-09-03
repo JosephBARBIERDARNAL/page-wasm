@@ -41,3 +41,8 @@ just check
 
 Individual commands include `just fmt`, `just lint`, `just build`, and `just test`.
 
+Run the interactive browser demo with:
+
+```sh
+npm run dev
+```
