@@ -2,13 +2,7 @@
 
 WebAssembly and TypeScript bindings for [`page`](https://github.com/JosephBARBIERDARNAL/page), a fast and lightweight PDF accessibility and compliance checker.
 
-## Install
-
-```sh
-npm install page-validation
-```
-
-## Validate PDF bytes
+## Validate PDF
 
 ```ts
 import {
@@ -18,9 +12,12 @@ import {
 } from "page-validation";
 
 const bytes = new Uint8Array(await pdfFile.arrayBuffer());
-const report = await validatePdfBytes(bytes, ValidationProfile.PDF_A_1B);
 
+// Validate a PDF and check its failures
+const report = await validatePdfBytes(bytes, ValidationProfile.PDF_A_1B);
 console.log(report.isCompliant, report.failures);
+
+// Faster validation, but without failure details
 const isCompliant = await isPdfCompliantBytes(bytes, ValidationProfile.PDF_A_1B);
 ```
 
