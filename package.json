@@ -43,9 +43,9 @@
     "typecheck": "tsc --noEmit -p tsconfig.test.json"
   },
   "devDependencies": {
-    "@eslint/js": "^9.35.0",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^24.3.0",
-    "eslint": "^9.35.0",
+    "eslint": "^10.9.1",
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2",
@@ -53,5 +53,9 @@
     "vite": "^7.3.6",
     "vite-plugin-wasm": "^3.6.0",
     "vitest": "^3.2.4"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true
   }
 }
