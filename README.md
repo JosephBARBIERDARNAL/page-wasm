@@ -1,6 +1,6 @@
-# page-validation
+# page Wasm
 
-WebAssembly and TypeScript bindings for [`page`](https://github.com/JosephBARBIERDARNAL/page), a fast and lightweight PDF accessibility and compliance checker.
+WebAssembly bindings for [`page`](https://github.com/JosephBARBIERDARNAL/page), a fast and lightweight PDF accessibility and compliance checker.
 
 ## Validate PDF
 
