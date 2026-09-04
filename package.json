@@ -34,6 +34,8 @@
     "build": "npm run build:wasm && npm run build:ts",
     "build:ts": "tsc -p tsconfig.json",
     "build:wasm": "wasm-pack build --target bundler --release --no-opt --out-dir dist --out-name page_validation",
+    "postbuild:wasm": "node -e \"require('node:fs').rmSync('dist/.gitignore', { force: true })\"",
+    "prepack": "npm run build",
     "dev": "npm run build && vite --host 127.0.0.1",
     "format": "prettier --write eslint.config.js src tests vite.config.ts package.json tsconfig.json tsconfig.test.json .github/workflows/*.yml",
     "format:check": "prettier --check eslint.config.js src tests vite.config.ts package.json tsconfig.json tsconfig.test.json .github/workflows/*.yml",

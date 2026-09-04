@@ -1,26 +1,69 @@
-# page Wasm
+# page-validation-wasm
 
-WebAssembly bindings for [`page`](https://github.com/JosephBARBIERDARNAL/page), a fast and lightweight PDF accessibility and compliance checker.
+JavaScript and TypeScript bindings to [`page`](https://josephbarbierdarnal.github.io/page/), a fast and lightweight PDF accessibility and compliance checker.
 
-## Validate PDF
+<br>
+
+## Validate a PDF
 
 ```ts
-import {
-  ValidationProfile,
-  isPdfCompliantBytes,
-  validatePdfBytes,
-} from "page-validation";
+import { validatePdfBytes } from "page-validation-wasm";
 
 const bytes = new Uint8Array(await pdfFile.arrayBuffer());
+const report = await validatePdfBytes(bytes);
+console.log(report);
 
-// Validate a PDF and check its failures
-const report = await validatePdfBytes(bytes, ValidationProfile.PDF_A_1B);
-console.log(report.isCompliant, report.failures);
-
-// Faster validation, but without failure details
-const isCompliant = await isPdfCompliantBytes(bytes, ValidationProfile.PDF_A_1B);
+if (!report.isCompliant) {
+  for (const failure of report.failures) {
+    console.log(`[${failure.ruleId}] ${failure.message}`);
+  }
+}
 ```
 
-The first call initializes the WebAssembly module automatically. Call `initialize()` during application startup if you want to control initialization explicitly. The byte APIs delegate to `page_validation::validate_pdf_bytes()` and `page_validation::is_pdf_compliant_bytes()`.
+`validatePdfBytes()` infers the PDF/A or PDF/UA profile from the document's XMP metadata. It throws `ValidationError` when the profile declaration is missing, malformed, or unsupported, or when the input cannot be read or parsed.
 
-Pass no profile to infer it from the PDF's XMP metadata. Safety limits can be customized with `SafetyLimits` or a partial options object.
+For a fast boolean result, use `isPdfCompliantBytes()`:
+
+```ts
+import { isPdfCompliantBytes } from "page-validation-wasm";
+
+const isCompliant = await isPdfCompliantBytes(bytes);
+console.log(isCompliant);
+```
+
+To select the profile yourself, use the explicit-profile variant:
+
+```ts
+import { ValidationProfile, validatePdfBytes } from "page-validation-wasm";
+
+const report = await validatePdfBytes(bytes, ValidationProfile.PDF_A_1B);
+```
+
+The explicit-profile `validatePdfBytes()` call always returns a `ValidationReport`. Parser, operational, and conformance problems are represented in `report.failures`.
+
+You can export the results as JSON with:
+
+```ts
+const json = report.toJson();
+```
+
+<br>
+
+## Configure safety limits
+
+All validation functions accept an optional `SafetyLimits` instance:
+
+```ts
+import { SafetyLimits, validatePdfBytes } from "page-validation-wasm";
+
+const limits = new SafetyLimits({
+  maxInputSize: 100 * 1024 * 1024,
+  maxDecodedStreamSize: 32 * 1024 * 1024,
+  maxTotalDecodedContentSize: 100 * 1024 * 1024,
+  maxObjectCount: 500_000,
+  maxReferenceDepth: 256,
+  maxXrefRevisions: 1_024,
+});
+
+const report = await validatePdfBytes(bytes, undefined, limits);
+```
